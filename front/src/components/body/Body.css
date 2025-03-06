@@ -1,0 +1,14 @@
+.form_head{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    padding-top: 90px;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 30px;
+}
