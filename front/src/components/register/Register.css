@@ -1,0 +1,12 @@
+.message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+
+.message-text {
+    color: rgb(32, 17, 196);
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}

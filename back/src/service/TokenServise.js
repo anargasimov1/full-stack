@@ -9,9 +9,19 @@ class TokenService {
     }
 
     async saveToken(user, token) {
+        const exist = await tokenModel.findOne({ user })
 
-        await tokenModel.create({ user, token });
+        if (exist) {
+            const upDate = await tokenModel.findOneAndUpdate({ user, token });
+            return upDate.token
+        }
+        else {
+            const info = await tokenModel.create({ user, token });
+            return info.token
+        }
     }
+
+
 }
 
 module.exports = new TokenService();

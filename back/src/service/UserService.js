@@ -10,7 +10,7 @@ class UserService {
         try {
             const userName = await user.findOne({ email });
             if (userName) {
-                throw new Error("user is already have");
+                return `Bu ${email} ilə atrıq qeydiyyatdan keçmisiz`, false;
             }
 
             const hashPassword = await bcrypt.hash(password, 8);
@@ -19,8 +19,8 @@ class UserService {
             const dto = new userDto(newUser);
             const token = TokenService.generateToken({ ...dto });
 
-            TokenService.saveToken(newUser, token);
-            return { token, dto };
+            await TokenService.saveToken(newUser, token);
+            return "Uğurlu qeydiyyat", true;
         } catch (error) {
             console.log(error.message);
         }
@@ -34,6 +34,15 @@ class UserService {
         }
     }
 
+    async findUserById(id) {
+        const user_info = await user.findById({ _id: id });
+        if (user_info) {
+            const dto = new userInfo(user_info);
+            return dto;
+        }
+
+    }
+
     async upDate(id, newuser) {
         try {
             const upDateUser = await user.findByIdAndUpdate(id, newuser);
@@ -41,6 +50,31 @@ class UserService {
         } catch (error) {
             console.log(err);
         }
+    }
+
+    async login(email, password) {
+        try {
+            const exsits = await user.findOne({ email })
+            if (exsits) {
+                const isMacth = await bcrypt.compare(password, exsits.password)
+                if (isMacth) {
+                    const Dto = new userDto(exsits);
+                    const token = TokenService.generateToken({ ...Dto });
+                    const saveToken = await TokenService.saveToken(exsits, token);
+
+                    return { token: saveToken, id: Dto.id };
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }
 

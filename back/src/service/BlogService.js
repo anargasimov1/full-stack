@@ -42,7 +42,7 @@ class BlogService {
 
     async allBlogs() {
         try {
-            const allBlogs = BlogModel.find().populate("author", "name surname -_id").lean();
+            const allBlogs = BlogModel.find();
             return allBlogs; // burada countDocuments() edim butun sayida bildirmek olar fronta ve limit vermek .skip().limit()
         } catch (error) {
             console.log(error.message);

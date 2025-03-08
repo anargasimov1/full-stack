@@ -1,17 +1,18 @@
 const service = require('../service/UserService');
-const user = require('../models/UserModels');
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
 
 class UserController {
-  async registration(req, res, next) {
+  async registration(req, res) {
     try {
       const { name, surname, password, email, role } = req.body;
-      const newUser = await user.findOne({ email });
-      if (newUser)
-        res.json({ message: "user already is registered" })
-      const token = await service.register(name, surname, password, email, role);
-      res.send(token);
+      const message = await service.register(name, surname, password, email, role);
+      if (message) {
+        res.status(200).json({ message: "ugurlu" })
+      }
+      else {
+        res.status(400).json({ message: "sehv oldu" })
+      }
+
+
     } catch (error) {
       res.json({ message: error.message })
     }
@@ -27,6 +28,13 @@ class UserController {
     }
   }
 
+  async findUserById(req, res) {
+    const id = req.params.id;
+    const user = await service.findUserById(id)
+    res.json(user);
+
+  }
+
   async UpDate(req, res) {
     try {
       const id = req.params.id;
@@ -35,6 +43,18 @@ class UserController {
       res.json(upDatedUser);
     } catch (error) {
       res.json({ message: error.message });
+    }
+  }
+
+  async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      const token = await service.login(email, password);
+      if (token)
+        res.json(token)
+      else res.status(401).json("Istifdeci adi ve ya parol sehvdir")
+    } catch (error) {
+      console.log(error);
     }
   }
 

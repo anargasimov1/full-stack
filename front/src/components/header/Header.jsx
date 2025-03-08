@@ -6,7 +6,8 @@ const Header = () => {
       <ul type="none" className='nav'>
         <a href="/body"><li>Ana Səhifə</li></a>
         <a href="/login"><li>Daxil ol</li></a>
-        <a href="/body"><li>Qeydiyyat</li></a>
+        <a href="/register"><li>Qeydiyyat</li></a>
+        <a href="/profile">profile</a>
       </ul>
     </div>
   )
