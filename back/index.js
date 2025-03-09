@@ -19,6 +19,7 @@ app.use('/api', router);
 app.use('/api', blogRouter)
 
 
+
 app.listen(PORT, () => console.log(`server is started in ${PORT} port`));
 
 mongoose.connect(url).then(() => console.log('connected db'));

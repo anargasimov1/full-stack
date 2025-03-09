@@ -76,6 +76,38 @@ class UserService {
         }
 
     }
+
+    async addWishlist(id, blogId) {
+        try {
+            const exsits = await user.findById(id);
+            if (!exsits) return "not found";
+
+            if (!exsits.fovarites.includes(blogId)) {
+                exsits.fovarites.push(blogId);
+                exsits.save();
+                return exsits.fovarites
+            }
+            else {
+                return "atiq elave olunub"
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    async findFovarites(id) {
+        try {
+            const exsits = await user.findById(id);
+            if (!exsits) return "not found"
+            return exsits.fovarites;
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
 }
 
 module.exports = new UserService();

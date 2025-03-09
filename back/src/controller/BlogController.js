@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 class BlogConrtroller {
     async createBlog(req, res) {
         const { title, description, img } = req.body;
-        const userId = req.user.id;
+        const userId = req.params.id;
         const blog = await BlogService.postBlog(title, description, img, userId);
         return res.json(blog);
     }

@@ -58,6 +58,29 @@ class UserController {
     }
   }
 
+  async addFovarites(req, res) {
+    const id = req.body.id;
+    const blogId = req.params.id;
+    try {
+      const message = await service.addWishlist(id, blogId);
+      res.json({ message })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findAllFovarites(req, res) {
+    try {
+      const id = req.params.id
+      const fovarites = await service.findFovarites(id);
+      res.json({ fovarites })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+ 
+
 }
 
 module.exports = new UserController();

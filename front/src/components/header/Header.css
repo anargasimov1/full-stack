@@ -1,10 +1,18 @@
 .nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 25px;
+    gap: 130px;
     background-color: rgb(231, 221, 221);
 }
 
 a {
     text-decoration: none;
+}
+
+.text {
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

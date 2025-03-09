@@ -5,12 +5,12 @@ export default function Profile() {
     const [blogs, setBlogs] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [img, setImg] = useState('cv ');
-    const [userInfo, setUserInfo] = useState({})
+    const [img, setImg] = useState('https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQd1kWKsODGmz1P44kiLTfpeIOkaemYITnaRVOZEn372xCyrpNoQQ_dMDAV4dWLpVTDFekNEtlkJaDnhlTzoQWdNg');
+    const [userInfo, setUserInfo] = useState({});
+    const [edit, setEdit] = useState(false);
+    const [fovarites, setFovarites] = useState([]);
+    const [toggle, setToggle] = useState(false)
 
-    let BlogIds = []
-
-    let token = localStorage.getItem('token')
     let id = localStorage.getItem('id')
 
     useEffect(() => {
@@ -19,20 +19,26 @@ export default function Profile() {
             .then(d => setBlogs(d))
     }, []);
     useEffect(() => {
-        fetch('http://127.0.0.1:7001/api/auth/id/' + id).then(r => r.json()).then(r => setUserInfo(r))
+        fetch('http://127.0.0.1:7001/api/auth/id/' + id, {
+            headers: {
+                "Authorization": localStorage.getItem('token')
+            }
+        }).then(r => r.json()).then(r => setUserInfo(r))
     }, [])
 
-    blogs.map(i => BlogIds.push(i.author));
+    useEffect(() => {
+        fetch('http://127.0.0.1:7001/api/auth/fovarites/' + id).then(r => r.json()).then(r => setFovarites(r.fovarites))
+    }, [toggle])
 
 
 
     const addBlog = () => {
         let newBlog = { title, description, img }
-        fetch('http://127.0.0.1:7001/api/blogs/create', {
+        fetch('http://127.0.0.1:7001/api/blogs/create/' + id, {
             method: "POST",
             headers: {
                 'Content-Type': "application/json",
-                "Authorization": token
+                "Authorization": localStorage.getItem('token')
             },
             body: JSON.stringify(newBlog)
         }
@@ -61,6 +67,34 @@ export default function Profile() {
         })
     }
 
+    const editBlog = id => {
+        setEdit(true)
+        let editedBlog = { title, description }
+        fetch('http://127.0.0.1:7001/api/blogs/update/' + id, {
+            method: "PUT",
+            headers: {
+                "Authorization": localStorage.getItem('token')
+            },
+            body: JSON.stringify(editedBlog)
+        })
+
+    }
+
+    const addWishlist = blogId => {
+
+        let uid = localStorage.getItem('id')
+        fetch('http://127.0.0.1:7001/api/auth/fovarites/' + blogId, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem('token')
+            },
+            body: JSON.stringify({ id: uid })
+        }).then(r => {
+            if (r.ok) setToggle(!toggle)
+        })
+    }
+
     function toBase64(e) {
         let reader = new FileReader();
         reader.readAsDataURL(e.target.files[0])
@@ -68,11 +102,9 @@ export default function Profile() {
             setImg(reader.result)
         }
         reader.onerror = (error) => {
-            console.log(error)
+            console.log(error);
         }
     }
-
-
 
     return (
         <>
@@ -100,18 +132,18 @@ export default function Profile() {
                 {
                     blogs.map((i, index) => {
 
-                        return (<div key={index} className="cards">
-                            <div className="card">
-                                <i class="fa-regular fa-heart"></i>
-                                {<button onClick={() => deleteBlog(i._id)} className='btn' type='button'><i class="fa-solid fa-trash"></i></button>}
-                                {id === i.author && <button className='btn' onClick={() => console.log('pres')} type='button'><i class="fa-solid fa-file-pen"></i></button>}
+                        return (
+                            <div className="card" key={index}>
+                                <i onClick={() => addWishlist(i._id)} class={`fa-${fovarites.includes(i._id) ? "solid" : "regular"} fa-heart`}></i>
+                                {id === i.author && <button onClick={() => deleteBlog(i._id)} className='btn' type='button'><i class="fa-solid fa-trash"></i></button>}
+                                {id === i.author && <button role={i._id} className='btn' onClick={() => editBlog(i._id)} type='button'><i class="fa-solid fa-file-pen"></i></button>}
                                 <img src={i.img} className="card-img-top" alt="..." />
                                 <div className="card-body">
-                                    <h5 className="card-title">{i.title}</h5>
-                                    <p className="card-text">{i.description}</p>
+                                    {id === i.author && edit ? <input onChange={e => { setTitle(e.target.value) }} type="text" value={title} /> : <h5 className="card-title">{i.title}</h5>}
+                                    {id === i.author && edit ? <input onChange={e => setTitle(e.target.value)} type="text" value={description} /> : <p className="card-text">{i.description}</p>}
                                 </div>
                             </div>
-                        </div>)
+                        )
 
                     })
                 }
