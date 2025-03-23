@@ -79,7 +79,16 @@ class UserController {
     }
   }
 
- 
+  async deleteUser(req, res) {
+    try {
+      const id = req.params.id;
+      await service.deleteUser(id);
+      res.json({ message: "deleted" })
+    } catch (error) {
+      res.status(401).json({ message: "not deleted" })
+    }
+  }
+
 
 }
 

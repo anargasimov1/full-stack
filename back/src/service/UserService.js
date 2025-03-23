@@ -108,6 +108,14 @@ class UserService {
 
     }
 
+    async deleteUser(id) {
+        try {
+            await user.findByIdAndDelete(id);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 }
 
 module.exports = new UserService();

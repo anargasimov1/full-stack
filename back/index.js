@@ -5,8 +5,8 @@ require('dotenv').config();
 const router = require('./src/router/UserRouter');
 const blogRouter = require('./src/router/BlogRouter');
 
-const url = process.env.URL;
-const PORT = process.env.PORT || 3001;
+const url = "mongodb+srv://user:user1234@node-js.jajlw.mongodb.net/mydb?retryWrites=true&w=majority&appName=node-js"
+const PORT = process.env.PORT || 5001;
 
 const app = express();
 app.use(cors({

@@ -17,5 +17,6 @@ router.get('/auth/id/:id', authMiddleware, controller.findUserById);
 router.post('/auth/fovarites/:id', authMiddleware, controller.addFovarites);
 router.get('/auth/fovarites/:id', controller.findAllFovarites);
 router.post('/auth/admin', checkadmin('admin'), controller.login);
+router.delete('/auth/delete/:id', controller.deleteUser)
 
 module.exports = router;

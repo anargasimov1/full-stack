@@ -14,6 +14,17 @@ export const AdminPage = () => {
 
   }, [])
 
+  function deletUser(id) {
+
+    fetch('http://localhost:7001/api/auth/delete/' + id, {
+      method: "DELETE",
+      headers: {
+        "Authorization": localStorage.getItem('token')
+      }
+    }).then(r => r.json()).then(d => alert(d.message))
+
+  }
+
 
   return (
     <div>
@@ -37,12 +48,15 @@ export const AdminPage = () => {
                   <td>{i.surname}</td>
                   <td>{i.email}</td>
                   <td>{i.role}</td>
-                  <td><button><i className='fa-solid fa-trash-can'></i></button></td>
+                  <td onClick={() => deletUser(i._id)}><button ><i className='fa-solid fa-trash-can'></i></button></td>
                 </tr>
               )
             })
           }
         </tbody>
+        <tfoot>
+
+        </tfoot>
       </table>
       <hr />
     </div>
